@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Анкета подрядчика</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Анкета подрядчика</h1>
+    <p class="intro">Заполните данные внимательно. Они будут использованы для подготовки договора.</p>
+
+    <form id="contractor-form" novalidate>
+      <fieldset>
+        <legend>Личные данные</legend>
+        <label>ФИО *<input name="fullName" autocomplete="name" required></label>
+        <label>Дата рождения *<input name="birthDate" type="date" required></label>
+        <label>Адрес регистрации *<textarea name="registrationAddress" rows="3" required></textarea></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Паспорт</legend>
+        <label>Серия *<input name="passportSeries" inputmode="numeric" maxlength="4" required></label>
+        <label>Номер *<input name="passportNumber" inputmode="numeric" maxlength="6" required></label>
+        <label>Дата выдачи *<input name="passportIssueDate" type="date" required></label>
+        <label>Кем выдан *<textarea name="passportIssuedBy" rows="3" required></textarea></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Идентификаторы и контакты</legend>
+        <label>ИНН *<input name="inn" inputmode="numeric" maxlength="12" required></label>
+        <label>СНИЛС *<input name="snils" inputmode="numeric" maxlength="11" required></label>
+        <label>Телефон *<input name="phone" type="tel" autocomplete="tel" required></label>
+        <label>Электронная почта *<input name="email" type="email" autocomplete="email" required></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Банковские реквизиты</legend>
+        <label>Наименование банка *<input name="bankName" required></label>
+        <label>БИК *<input name="bik" inputmode="numeric" maxlength="9" required></label>
+        <label>Расчётный счёт *<input name="accountNumber" inputmode="numeric" maxlength="20" required></label>
+        <label>Корреспондентский счёт <input name="correspondentAccount" inputmode="numeric" maxlength="20"></label>
+      </fieldset>
+
+      <div id="form-errors" class="errors" role="alert" aria-live="polite"></div>
+      <button type="submit">Сохранить анкету</button>
+      <p id="success-message" class="success" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <script src="validation.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
