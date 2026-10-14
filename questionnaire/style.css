@@ -10,3 +10,4 @@ input, textarea { display: block; width: 100%; box-sizing: border-box; margin-to
 button { padding: 12px 20px; border: 0; border-radius: 6px; color: white; background: #2563eb; font-size: 16px; cursor: pointer; }
 .errors { color: #b91c1c; }
 .success { color: #166534; font-weight: 700; }
+.hint { color: #4b5563; font-size: 14px; }

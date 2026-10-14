@@ -1,6 +1,22 @@
 const form = document.querySelector('#contractor-form');
 const errorsBox = document.querySelector('#form-errors');
 const successBox = document.querySelector('#success-message');
+const bikInput = form.elements.bik;
+const bankInput = form.elements.bankName;
+const correspondentInput = form.elements.correspondentAccount;
+
+// Для MVP используется небольшой демонстрационный справочник. В рабочей версии
+// его заменим на актуальный справочник банков или API.
+const bankDirectory = {
+  '044525225': { name: 'ПАО Сбербанк', correspondentAccount: '' }
+};
+
+bikInput.addEventListener('input', () => {
+  const record = bankDirectory[digits(bikInput.value)];
+  if (!record) return;
+  bankInput.value = record.name;
+  correspondentInput.value = record.correspondentAccount;
+});
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();

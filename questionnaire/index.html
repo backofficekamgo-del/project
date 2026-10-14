@@ -37,10 +37,11 @@
 
       <fieldset>
         <legend>Банковские реквизиты</legend>
-        <label>Наименование банка *<input name="bankName" required></label>
         <label>БИК *<input name="bik" inputmode="numeric" maxlength="9" required></label>
-        <label>Расчётный счёт *<input name="accountNumber" inputmode="numeric" maxlength="20" required></label>
+        <label>Наименование банка *<input name="bankName" required></label>
         <label>Корреспондентский счёт <input name="correspondentAccount" inputmode="numeric" maxlength="20"></label>
+        <label>Расчётный счёт *<input name="accountNumber" inputmode="numeric" maxlength="20" required></label>
+        <p class="hint">После ввода БИК известные данные банка подставятся автоматически.</p>
       </fieldset>
 
       <div id="form-errors" class="errors" role="alert" aria-live="polite"></div>
