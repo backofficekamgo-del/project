@@ -8,7 +8,11 @@ const correspondentInput = form.elements.correspondentAccount;
 // Для MVP используется небольшой демонстрационный справочник. В рабочей версии
 // его заменим на актуальный справочник банков или API.
 const bankDirectory = {
-  '044525225': { name: 'ПАО Сбербанк', correspondentAccount: '' }
+  '044525225': { name: 'ПАО Сбербанк', correspondentAccount: '30101810400000000225' },
+  '044525187': { name: 'Банк ВТБ (ПАО)', correspondentAccount: '30101810145250000187' },
+  '044525593': { name: 'АО «Альфа-Банк»', correspondentAccount: '301018102000005935' },
+  '044525974': { name: 'Тинькофф Банк', correspondentAccount: '30101810145250000974' },
+  '044525700': { name: 'АО «Райффайзенбанк»', correspondentAccount: '30101810200000000700' }
 };
 
 bikInput.addEventListener('input', () => {
