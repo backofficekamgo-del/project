@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кабинет кадровика</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Кабинет кадровика</h1>
+    <p class="intro">Демонстрационная страница для обработки анкет подрядчиков.</p>
+    <div id="empty" class="notice">Новых анкет пока нет. Сначала заполните анкету подрядчика.</div>
+    <section id="application" class="card" hidden>
+      <div class="status">Новая анкета</div>
+      <h2 id="name"></h2>
+      <p>Дата отправки: <span id="submitted"></span></p>
+      <p>Статус: <strong>Ожидает формирования договора</strong></p>
+      <button id="create">Сформировать договор</button>
+      <p id="created" class="success"></p>
+    </section>
+  </main>
+  <script src="app.js?v=1"></script>
+</body>
+</html>

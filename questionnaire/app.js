@@ -32,6 +32,6 @@ form.addEventListener('submit', (event) => {
   errorsBox.innerHTML = errors.length ? `<ul>${errors.map((error) => `<li>${error}</li>`).join('')}</ul>` : '';
   if (errors.length) return;
   localStorage.setItem('contractorQuestionnaire', JSON.stringify(data));
-  successBox.textContent = 'Данные успешно сохранены. Спасибо!';
+  successBox.innerHTML = 'Анкета успешно отправлена. Данные переданы кадровику.';
   form.reset();
 });
