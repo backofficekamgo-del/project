@@ -21,13 +21,37 @@ if (raw) {
   document.querySelector('#name').textContent = data.fullName || 'Подрядчик';
   document.querySelector('#submitted').textContent = new Date().toLocaleString('ru-RU');
   document.querySelector('#create').addEventListener('click', () => {
-    const documentText = `ДОГОВОР ОКАЗАНИЯ УСЛУГ\n\nИсполнитель: ${data.fullName}\nПаспорт: серия ${data.passportSeries}, номер ${data.passportNumber}\nДата рождения: ${data.birthDate}\nАдрес: ${data.registrationAddress}\nИНН: ${data.inn}\nСНИЛС: ${data.snils}\nБанк: ${data.bankName}\nБИК: ${data.bik}\nКорреспондентский счёт: ${data.correspondentAccount || ''}\nРасчётный счёт: ${data.accountNumber}\n`;
-    const blob = new Blob([utf16Le(documentText)], { type: 'application/msword' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `Договор_ГПХ_${data.fullName || 'подрядчик'}.doc`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-    created.textContent = 'Договор сформирован и скачан.';
+    fetch('../templates/Шаблон%20ГПХ%20АНО.docx')
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => JSZip.loadAsync(buffer))
+      .then((zip) => zip.file('word/document.xml').async('string').then((xml) => ({ zip, xml })))
+      .then(({ zip, xml }) => {
+        const values = {
+          fullName: data.fullName, passport: `серия ${data.passportSeries}, номер ${data.passportNumber}`,
+          issueDate: data.passportIssueDate, issuedBy: data.passportIssuedBy, birthDate: data.birthDate,
+          address: data.registrationAddress, inn: data.inn, snils: data.snils, phone: data.phone,
+          email: data.email, bankName: data.bankName, bik: data.bik,
+          correspondent: data.correspondentAccount || '', account: data.accountNumber
+        };
+        const replace = (pattern, value) => { xml = xml.replace(pattern, `$1${value}$2`); };
+        replace(/(>)[_]{10,}(, именуемая)/, values.fullName);
+        replace(/(>Паспорт: )[^<]*(<\/w:t>)/, `серия ${data.passportSeries}, номер ${data.passportNumber}, дата выдачи ${data.passportIssueDate}, кем выдан ${data.passportIssuedBy}`);
+        replace(/(>Дата рождения )[^<]*(<\/w:t>)/, values.birthDate);
+        replace(/(>Адрес: )[^<]*(<\/w:t>)/, values.address);
+        replace(/(>ИНН)[^<]*(<\/w:t>)/, `: ${values.inn}`);
+        replace(/(>СНИЛС)[^<]*(<\/w:t>)/, `: ${values.snils} Телефон: ${values.phone} e-mail: ${values.email}`);
+        replace(/(>Банковские реквизиты:)(<\/w:t>)/, ` БИК: ${values.bik}; Банк: ${values.bankName}; Корр. счёт: ${values.correspondent}; Расчётный счёт: ${values.account}`);
+        zip.file('word/document.xml', xml);
+        return zip.generateAsync({ type: 'blob' });
+      })
+      .then((blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Договор_ГПХ_${data.fullName || 'подрядчик'}.docx`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        created.textContent = 'Договор сформирован по шаблону и скачан.';
+      })
+      .catch(() => { created.textContent = 'Не удалось сформировать договор. Проверьте доступ к шаблону.'; });
   });
 }
