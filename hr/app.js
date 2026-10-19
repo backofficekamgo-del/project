@@ -61,6 +61,13 @@ if (raw) {
         replaceText('<w:t>e-</w:t>', `<w:t>e-mail: ${xmlEscape(values.email)}</w:t>`);
         xml = xml.replace(/<w:t>Телефон<\/w:t>/g, '').replace(/<w:t>mail<\/w:t>/g, '');
         replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты:</w:t><w:br/><w:t>БИК: ${xmlEscape(values.bik)}</w:t><w:br/><w:t>Банк: ${xmlEscape(values.bankName)}</w:t><w:br/><w:t>к/с: ${xmlEscape(values.correspondent)}</w:t><w:br/><w:t>р/с: ${xmlEscape(values.account)}</w:t>`);
+        const bankStart = xml.indexOf('<w:t>Банковские реквизиты:');
+        const cellEnd = xml.indexOf('</w:tc>', bankStart);
+        if (bankStart >= 0 && cellEnd > bankStart) {
+          const before = xml.slice(0, bankStart);
+          const cell = xml.slice(bankStart, cellEnd).replace(/<w:p\b[^>]*>(?:\s*<w:pPr[\s\S]*?<\/w:pPr>)?\s*<\/w:p>/g, '');
+          xml = before + cell + xml.slice(cellEnd);
+        }
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
