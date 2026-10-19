@@ -52,7 +52,7 @@ if (raw) {
         replaceText('с одной стороны и _____________________________ ,', `с одной стороны и ${xmlEscape(values.fullName)} ,`);
         replaceText('________________________________________', xmlEscape(values.fullName));
         replaceNode('ФИО ______________________', `<w:t>ФИО ${xmlEscape(values.fullName)}</w:t>`);
-        replaceNode('Паспорт: __________ когда выдан ___________, кем выдан ________________________', `<w:t>Паспорт: ${xmlEscape(values.passport)}</w:t><w:br/><w:t>Дата выдачи: ${xmlEscape(values.issueDate)}</w:t><w:br/><w:t>Кем выдан: ${xmlEscape(values.issuedBy)}</w:t>`);
+        replaceNode('Паспорт: __________ когда выдан ___________, кем выдан ________________________', `<w:t>Паспорт: ${xmlEscape(values.passport)}; Дата выдачи: ${xmlEscape(values.issueDate)}; Кем выдан: ${xmlEscape(values.issuedBy)}</w:t>`);
         replaceNode('Дата рождения ______________', `<w:t>Дата рождения: ${xmlEscape(values.birthDate)}</w:t>`);
         replaceNode('Адрес: __________________', `<w:t>Адрес: ${xmlEscape(values.address)}</w:t>`);
         replaceNode('ИНН____________________', `<w:t>ИНН: ${xmlEscape(values.inn)}</w:t>`);
@@ -60,7 +60,7 @@ if (raw) {
         replaceText('<w:t>Телефон</w:t>', `<w:t>Телефон: ${xmlEscape(values.phone)}</w:t>`);
         replaceText('<w:t>e-</w:t>', `<w:t>e-mail: ${xmlEscape(values.email)}</w:t>`);
         xml = xml.replace(/<w:t>Телефон<\/w:t>/g, '').replace(/<w:t>mail<\/w:t>/g, '');
-        replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты:</w:t><w:br/><w:t>БИК: ${xmlEscape(values.bik)}</w:t><w:br/><w:t>Банк: ${xmlEscape(values.bankName)}</w:t><w:br/><w:t>к/с: ${xmlEscape(values.correspondent)}</w:t><w:br/><w:t>р/с: ${xmlEscape(values.account)}</w:t>`);
+        replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты: БИК: ${xmlEscape(values.bik)}; Банк: ${xmlEscape(values.bankName)}; к/с: ${xmlEscape(values.correspondent)}; р/с: ${xmlEscape(values.account)}</w:t>`);
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
