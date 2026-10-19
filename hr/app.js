@@ -65,8 +65,19 @@ if (raw) {
         const cellEnd = xml.indexOf('</w:tc>', bankStart);
         if (bankStart >= 0 && cellEnd > bankStart) {
           const before = xml.slice(0, bankStart);
-          const cell = xml.slice(bankStart, cellEnd).replace(/<w:p\b[^>]*>(?:\s*<w:pPr[\s\S]*?<\/w:pPr>)?\s*<\/w:p>/g, '');
+          let removed = 0;
+          const emptyParagraph = /<w:p\b[^>]*>(?:\s*<w:pPr[\s\S]*?<\/w:pPr>)?\s*<\/w:p>/g;
+          const cell = xml.slice(bankStart, cellEnd).replace(emptyParagraph, (match) => removed++ < 5 ? '' : match);
           xml = before + cell + xml.slice(cellEnd);
+        }
+        const appendixIndex = xml.indexOf('<w:t>Приложение № 1</w:t>');
+        if (appendixIndex >= 0) {
+          const paragraphStart = xml.lastIndexOf('<w:p ', appendixIndex);
+          const propertiesStart = xml.indexOf('<w:pPr', paragraphStart);
+          const propertiesEnd = xml.indexOf('>', propertiesStart);
+          if (paragraphStart >= 0 && propertiesStart > paragraphStart && propertiesEnd > propertiesStart) {
+            xml = xml.slice(0, propertiesEnd + 1) + '<w:pageBreakBefore/>' + xml.slice(propertiesEnd + 1);
+          }
         }
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
