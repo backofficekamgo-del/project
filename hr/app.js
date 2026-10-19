@@ -34,15 +34,17 @@ if (raw) {
           email: data.email, bankName: data.bankName, bik: data.bik,
           correspondent: data.correspondentAccount || '', account: data.accountNumber
         };
-        const replace = (pattern, value) => { xml = xml.replace(pattern, `$1${value}$2`); };
-        replace(/(с одной стороны и )[_]{10,}( , именуемая)/, values.fullName);
-        replace(/(>ФИО )[_]{5,}(<\/w:t>)/, values.fullName);
-        replace(/(>Паспорт: )[^<]*(<\/w:t>)/, `серия ${data.passportSeries}, номер ${data.passportNumber}, дата выдачи ${data.passportIssueDate}, кем выдан ${data.passportIssuedBy}`);
-        replace(/(>Дата рождения )[^<]*(<\/w:t>)/, values.birthDate);
-        replace(/(>Адрес: )[^<]*(<\/w:t>)/, values.address);
-        replace(/(>ИНН)[_]{5,}(<\/w:t>)/, `: ${values.inn}`);
-        replace(/(>СНИЛС)[^<]*(<\/w:t>)/, `: ${values.snils} Телефон: ${values.phone} e-mail: ${values.email}`);
-        replace(/(>Банковские реквизиты:)(<\/w:t>)/, ` БИК: ${values.bik}; Банк: ${values.bankName}; Корр. счёт: ${values.correspondent}; Расчётный счёт: ${values.account}`);
+        const replaceText = (from, to) => { xml = xml.replace(from, to); };
+        replaceText('________________________________________', values.fullName);
+        replaceText('ФИО ______________________', `ФИО ${values.fullName}`);
+        replaceText('Паспорт: __________ когда выдан ___________, кем выдан ________________________', `Паспорт: серия ${data.passportSeries}, номер ${data.passportNumber}, дата выдачи ${data.passportIssueDate}, кем выдан ${data.passportIssuedBy}`);
+        replaceText('Дата рождения ______________', `Дата рождения ${values.birthDate}`);
+        replaceText('Адрес: __________________', `Адрес: ${values.address}`);
+        replaceText('ИНН____________________', `ИНН${values.inn}`);
+        replaceText('СНИЛС____________________', `СНИЛС${values.snils}`);
+        replaceText('Телефон</w:t>', `Телефон: ${values.phone}</w:t>`);
+        replaceText('e-mail</w:t>', `e-mail: ${values.email}</w:t>`);
+        replaceText('Банковские реквизиты:</w:t>', `Банковские реквизиты: БИК: ${values.bik}; Банк: ${values.bankName}; Корр. счёт: ${values.correspondent}; Расчётный счёт: ${values.account}</w:t>`);
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
