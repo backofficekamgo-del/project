@@ -17,6 +17,12 @@ function utf16Le(text) {
 if (raw) {
   const data = JSON.parse(raw);
   const fullName = data.fullName || [data.lastName, data.firstName, data.middleName].filter(Boolean).join(' ');
+  const formatDate = (value) => {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return value || '';
+    const [year, month, day] = value.split('-');
+    return `${day}.${month}.${year}`;
+  };
+  const xmlEscape = (value) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   empty.hidden = true;
   application.hidden = false;
   document.querySelector('#name').textContent = fullName || 'Подрядчик';
@@ -29,22 +35,28 @@ if (raw) {
       .then(({ zip, xml }) => {
         const values = {
           fullName, passport: `серия ${data.passportSeries}, номер ${data.passportNumber}`,
-          issueDate: data.passportIssueDate, issuedBy: data.passportIssuedBy, birthDate: data.birthDate,
+          issueDate: formatDate(data.passportIssueDate), issuedBy: data.passportIssuedBy, birthDate: formatDate(data.birthDate),
           address: data.registrationAddress, inn: data.inn, snils: data.snils, phone: data.phone,
           email: data.email, bankName: data.bankName, bik: data.bik,
           correspondent: data.correspondentAccount || '', account: data.accountNumber
         };
         const replaceText = (from, to) => { xml = xml.replace(from, to); };
-        replaceText('________________________________________', values.fullName);
-        replaceText('ФИО ______________________', `ФИО ${values.fullName}`);
-        replaceText('Паспорт: __________ когда выдан ___________, кем выдан ________________________', `Паспорт: серия ${data.passportSeries}, номер ${data.passportNumber}, дата выдачи ${data.passportIssueDate}, кем выдан ${data.passportIssuedBy}`);
-        replaceText('Дата рождения ______________', `Дата рождения ${values.birthDate}`);
-        replaceText('Адрес: __________________', `Адрес: ${values.address}`);
-        replaceText('ИНН____________________', `ИНН${values.inn}`);
-        replaceText('СНИЛС____________________', `СНИЛС${values.snils}`);
-        replaceText('Телефон</w:t>', `Телефон: ${values.phone}</w:t>`);
-        replaceText('e-mail</w:t>', `e-mail: ${values.email}</w:t>`);
-        replaceText('Банковские реквизиты:</w:t>', `Банковские реквизиты: БИК: ${values.bik}; Банк: ${values.bankName}; Корр. счёт: ${values.correspondent}; Расчётный счёт: ${values.account}</w:t>`);
+        const replaceNode = (text, content) => {
+          const escaped = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          xml = xml.replace(new RegExp(`<w:t[^>]*>${escaped}</w:t>`), content);
+        };
+        replaceText('с одной стороны и _____________________________ ,', `с одной стороны и ${xmlEscape(values.fullName)} ,`);
+        replaceText('________________________________________', xmlEscape(values.fullName));
+        replaceNode('ФИО ______________________', `<w:t>ФИО ${xmlEscape(values.fullName)}</w:t>`);
+        replaceNode('Паспорт: __________ когда выдан ___________, кем выдан ________________________', `<w:t>Паспорт: ${xmlEscape(values.passport)}</w:t><w:br/><w:t>Дата выдачи: ${xmlEscape(values.issueDate)}</w:t><w:br/><w:t>Кем выдан: ${xmlEscape(values.issuedBy)}</w:t>`);
+        replaceNode('Дата рождения ______________', `<w:t>Дата рождения: ${xmlEscape(values.birthDate)}</w:t>`);
+        replaceNode('Адрес: __________________', `<w:t>Адрес: ${xmlEscape(values.address)}</w:t>`);
+        replaceNode('ИНН____________________', `<w:t>ИНН: ${xmlEscape(values.inn)}</w:t>`);
+        replaceNode('СНИЛС____________________', `<w:t>СНИЛС: ${xmlEscape(values.snils)}</w:t>`);
+        replaceText('<w:t>Телефон</w:t>', `<w:t>Телефон: ${xmlEscape(values.phone)}</w:t>`);
+        replaceText('<w:t>e-mail</w:t>', `<w:t>e-mail: ${xmlEscape(values.email)}</w:t>`);
+        xml = xml.replace(/<w:t>Телефон<\/w:t>/g, '').replace(/<w:t>e-mail<\/w:t>/g, '');
+        replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты:</w:t><w:br/><w:t>БИК: ${xmlEscape(values.bik)}</w:t><w:br/><w:t>Банк: ${xmlEscape(values.bankName)}</w:t><w:br/><w:t>к/с: ${xmlEscape(values.correspondent)}</w:t><w:br/><w:t>р/с: ${xmlEscape(values.account)}</w:t>`);
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
