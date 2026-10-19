@@ -59,6 +59,22 @@ if (raw) {
         replaceNode('СНИЛС____________________', `<w:t>СНИЛС: ${xmlEscape(values.snils)}</w:t>`);
         xml = xml.replace(/<w:t>СНИЛС[^<]*<\/w:t>[\s\S]*?<w:t xml:space="preserve"> <\/w:t><\/w:r><\/w:p>/, `<w:t>СНИЛС: ${xmlEscape(values.snils)}</w:t><\/w:r><w:r><w:br/><w:t>Телефон: ${xmlEscape(values.phone)}</w:t><\/w:r><w:r><w:br/><w:t>e-mail: ${xmlEscape(values.email)}</w:t><\/w:r><\/w:p>`);
         replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты:</w:t><w:br/><w:t>БИК: ${xmlEscape(values.bik)}</w:t><w:br/><w:t>Банк: ${xmlEscape(values.bankName)}</w:t><w:br/><w:t>к/с: ${xmlEscape(values.correspondent)}</w:t><w:br/><w:t>р/с: ${xmlEscape(values.account)}</w:t>`);
+        const paragraph = (text) => `<w:p><w:r><w:rPr><w:sz w:val="20"/><w:szCs w:val="20"/></w:rPr><w:t>${xmlEscape(text)}</w:t></w:r></w:p>`;
+        xml = xml.replace(/<w:p[^>]*>[\s\S]*?<w:t>Паспорт: серия[\s\S]*?<\/w:p>/, [
+          paragraph(`Паспорт: ${values.passport}`),
+          paragraph(`Дата выдачи: ${values.issueDate}`),
+          paragraph(`Кем выдан: ${values.issuedBy}`)
+        ].join(''));
+        xml = xml.replace(/<w:p[^>]*>[\s\S]*?<w:t>СНИЛС: [\s\S]*?<\/w:p>/, [
+          paragraph(`СНИЛС: ${values.snils}`),
+          paragraph(`Телефон: ${values.phone}`),
+          paragraph(`e-mail: ${values.email}`)
+        ].join(''));
+        xml = xml.replace(/<w:p[^>]*>[\s\S]*?<w:t>Банковские реквизиты:<\/w:t>[\s\S]*?<\/w:p>/, [
+          paragraph('Банковские реквизиты:'), paragraph(`БИК: ${values.bik}`),
+          paragraph(`Банк: ${values.bankName}`), paragraph(`к/с: ${values.correspondent}`),
+          paragraph(`р/с: ${values.account}`)
+        ].join(''));
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
