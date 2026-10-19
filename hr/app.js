@@ -35,11 +35,12 @@ if (raw) {
           correspondent: data.correspondentAccount || '', account: data.accountNumber
         };
         const replace = (pattern, value) => { xml = xml.replace(pattern, `$1${value}$2`); };
-        replace(/(>)[_]{10,}(, именуемая)/, values.fullName);
+        replace(/(с одной стороны и )[_]{10,}( , именуемая)/, values.fullName);
+        replace(/(>ФИО )[_]{5,}(<\/w:t>)/, values.fullName);
         replace(/(>Паспорт: )[^<]*(<\/w:t>)/, `серия ${data.passportSeries}, номер ${data.passportNumber}, дата выдачи ${data.passportIssueDate}, кем выдан ${data.passportIssuedBy}`);
         replace(/(>Дата рождения )[^<]*(<\/w:t>)/, values.birthDate);
         replace(/(>Адрес: )[^<]*(<\/w:t>)/, values.address);
-        replace(/(>ИНН)[^<]*(<\/w:t>)/, `: ${values.inn}`);
+        replace(/(>ИНН)[_]{5,}(<\/w:t>)/, `: ${values.inn}`);
         replace(/(>СНИЛС)[^<]*(<\/w:t>)/, `: ${values.snils} Телефон: ${values.phone} e-mail: ${values.email}`);
         replace(/(>Банковские реквизиты:)(<\/w:t>)/, ` БИК: ${values.bik}; Банк: ${values.bankName}; Корр. счёт: ${values.correspondent}; Расчётный счёт: ${values.account}`);
         zip.file('word/document.xml', xml);
