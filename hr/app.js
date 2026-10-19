@@ -22,6 +22,10 @@ if (raw) {
     const [year, month, day] = value.split('-');
     return `${day}.${month}.${year}`;
   };
+  const formatSnils = (value) => {
+    const digits = String(value || '').replace(/\D/g, '');
+    return digits.length === 11 ? `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 9)} ${digits.slice(9)}` : value || '';
+  };
   const xmlEscape = (value) => String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   empty.hidden = true;
   application.hidden = false;
@@ -36,7 +40,7 @@ if (raw) {
         const values = {
           fullName, passport: `серия ${data.passportSeries}, номер ${data.passportNumber}`,
           issueDate: formatDate(data.passportIssueDate), issuedBy: data.passportIssuedBy, birthDate: formatDate(data.birthDate),
-          address: data.registrationAddress, inn: data.inn, snils: data.snils, phone: data.phone,
+          address: data.registrationAddress, inn: data.inn, snils: formatSnils(data.snils), phone: data.phone,
           email: data.email, bankName: data.bankName, bik: data.bik,
           correspondent: data.correspondentAccount || '', account: data.accountNumber
         };
@@ -53,9 +57,7 @@ if (raw) {
         replaceNode('Адрес: __________________', `<w:t>Адрес: ${xmlEscape(values.address)}</w:t>`);
         replaceNode('ИНН____________________', `<w:t>ИНН: ${xmlEscape(values.inn)}</w:t>`);
         replaceNode('СНИЛС____________________', `<w:t>СНИЛС: ${xmlEscape(values.snils)}</w:t>`);
-        replaceText('<w:t>Телефон</w:t>', `<w:t>Телефон: ${xmlEscape(values.phone)}</w:t>`);
-        replaceText('<w:t>e-mail</w:t>', `<w:t>e-mail: ${xmlEscape(values.email)}</w:t>`);
-        xml = xml.replace(/<w:t>Телефон<\/w:t>/g, '').replace(/<w:t>e-mail<\/w:t>/g, '');
+        xml = xml.replace(/<w:t>СНИЛС[^<]*<\/w:t>[\s\S]*?<w:t xml:space="preserve"> <\/w:t><\/w:r><\/w:p>/, `<w:t>СНИЛС: ${xmlEscape(values.snils)}</w:t><\/w:r><w:r><w:br/><w:t>Телефон: ${xmlEscape(values.phone)}</w:t><\/w:r><w:r><w:br/><w:t>e-mail: ${xmlEscape(values.email)}</w:t><\/w:r><\/w:p>`);
         replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты:</w:t><w:br/><w:t>БИК: ${xmlEscape(values.bik)}</w:t><w:br/><w:t>Банк: ${xmlEscape(values.bankName)}</w:t><w:br/><w:t>к/с: ${xmlEscape(values.correspondent)}</w:t><w:br/><w:t>р/с: ${xmlEscape(values.account)}</w:t>`);
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
