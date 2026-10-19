@@ -60,7 +60,7 @@ if (raw) {
         replaceText('<w:t>Телефон</w:t>', `<w:t>Телефон: ${xmlEscape(values.phone)}</w:t>`);
         replaceText('<w:t>e-</w:t>', `<w:t>e-mail: ${xmlEscape(values.email)}</w:t>`);
         xml = xml.replace(/<w:t>Телефон<\/w:t>/g, '').replace(/<w:t>mail<\/w:t>/g, '');
-        replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты: БИК: ${xmlEscape(values.bik)}; Банк: ${xmlEscape(values.bankName)}; к/с: ${xmlEscape(values.correspondent)}; р/с: ${xmlEscape(values.account)}</w:t>`);
+        replaceNode('Банковские реквизиты:', `<w:t>Банковские реквизиты:</w:t><w:br/><w:t>БИК: ${xmlEscape(values.bik)}</w:t><w:br/><w:t>Банк: ${xmlEscape(values.bankName)}</w:t><w:br/><w:t>к/с: ${xmlEscape(values.correspondent)}</w:t><w:br/><w:t>р/с: ${xmlEscape(values.account)}</w:t>`);
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
