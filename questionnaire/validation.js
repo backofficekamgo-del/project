@@ -5,7 +5,7 @@ function digits(value) {
 function validateContractor(data) {
   const errors = [];
   const required = {
-    fullName: 'ФИО', birthDate: 'Дата рождения', registrationAddress: 'Адрес регистрации',
+    lastName: 'Фамилия', firstName: 'Имя', birthDate: 'Дата рождения', registrationAddress: 'Адрес регистрации',
     passportSeries: 'Серия паспорта', passportNumber: 'Номер паспорта',
     passportIssueDate: 'Дата выдачи паспорта', passportIssuedBy: 'Кем выдан паспорт',
     inn: 'ИНН', snils: 'СНИЛС', phone: 'Телефон', email: 'Электронная почта',

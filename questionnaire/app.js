@@ -26,6 +26,7 @@ form.addEventListener('submit', (event) => {
   event.preventDefault();
   successBox.textContent = '';
   const data = Object.fromEntries(new FormData(form).entries());
+  data.fullName = [data.lastName, data.firstName, data.middleName].filter(Boolean).join(' ');
   ['passportSeries', 'passportNumber', 'inn', 'snils', 'bik', 'accountNumber', 'correspondentAccount']
     .forEach((key) => { if (data[key]) data[key] = digits(data[key]); });
   const errors = validateContractor(data);
