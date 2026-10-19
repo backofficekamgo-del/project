@@ -16,9 +16,10 @@ function utf16Le(text) {
 
 if (raw) {
   const data = JSON.parse(raw);
+  const fullName = data.fullName || [data.lastName, data.firstName, data.middleName].filter(Boolean).join(' ');
   empty.hidden = true;
   application.hidden = false;
-  document.querySelector('#name').textContent = data.fullName || 'Подрядчик';
+  document.querySelector('#name').textContent = fullName || 'Подрядчик';
   document.querySelector('#submitted').textContent = new Date().toLocaleString('ru-RU');
   document.querySelector('#create').addEventListener('click', () => {
     fetch('../templates/Шаблон%20ГПХ%20АНО.docx')
@@ -27,7 +28,7 @@ if (raw) {
       .then((zip) => zip.file('word/document.xml').async('string').then((xml) => ({ zip, xml })))
       .then(({ zip, xml }) => {
         const values = {
-          fullName: data.fullName, passport: `серия ${data.passportSeries}, номер ${data.passportNumber}`,
+          fullName, passport: `серия ${data.passportSeries}, номер ${data.passportNumber}`,
           issueDate: data.passportIssueDate, issuedBy: data.passportIssuedBy, birthDate: data.birthDate,
           address: data.registrationAddress, inn: data.inn, snils: data.snils, phone: data.phone,
           email: data.email, bankName: data.bankName, bik: data.bik,
@@ -47,7 +48,7 @@ if (raw) {
       .then((blob) => {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `Договор_ГПХ_${data.fullName || 'подрядчик'}.docx`;
+        link.download = `Договор_ГПХ_${fullName || 'подрядчик'}.docx`;
         link.click();
         URL.revokeObjectURL(link.href);
         created.textContent = 'Договор сформирован по шаблону и скачан.';
