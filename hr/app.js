@@ -70,15 +70,6 @@ if (raw) {
           const cell = xml.slice(bankStart, cellEnd).replace(emptyParagraph, (match) => removed++ < 5 ? '' : match);
           xml = before + cell + xml.slice(cellEnd);
         }
-        const appendixIndex = xml.indexOf('<w:t>Приложение № 1</w:t>');
-        if (appendixIndex >= 0) {
-          const paragraphStart = xml.lastIndexOf('<w:p ', appendixIndex);
-          const propertiesStart = xml.indexOf('<w:pPr', paragraphStart);
-          const propertiesEnd = xml.indexOf('>', propertiesStart);
-          if (paragraphStart >= 0 && propertiesStart > paragraphStart && propertiesEnd > propertiesStart) {
-            xml = xml.slice(0, propertiesEnd + 1) + '<w:pageBreakBefore/>' + xml.slice(propertiesEnd + 1);
-          }
-        }
         zip.file('word/document.xml', xml);
         return zip.generateAsync({ type: 'blob' });
       })
