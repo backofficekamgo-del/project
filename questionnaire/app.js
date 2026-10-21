@@ -7,6 +7,9 @@ const correspondentInput = form.elements.correspondentAccount;
 const civilServantSelect = form.elements.wasCivilServant;
 const civilServiceDetails = document.querySelector('#civil-service-details');
 const civilServiceDetailsInput = form.elements.civilServiceDetails;
+const actualAddressSame = form.elements.actualAddressSame;
+const actualAddressField = document.querySelector('#actual-address-field');
+const actualAddressInput = form.elements.actualAddress;
 
 // Для MVP используется небольшой демонстрационный справочник. В рабочей версии
 // его заменим на актуальный справочник банков или API.
@@ -32,10 +35,19 @@ civilServantSelect.addEventListener('change', () => {
   if (!isRequired) civilServiceDetailsInput.value = '';
 });
 
+actualAddressSame.addEventListener('change', () => {
+  const same = actualAddressSame.value === 'Да';
+  actualAddressField.hidden = same;
+  actualAddressInput.required = !same;
+  if (same) actualAddressInput.value = form.elements.registrationAddress.value;
+  if (!same) actualAddressInput.value = '';
+});
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   successBox.textContent = '';
   const data = Object.fromEntries(new FormData(form).entries());
+  if (data.actualAddressSame === 'Да') data.actualAddress = data.registrationAddress;
   data.fullName = [data.lastName, data.firstName, data.middleName].filter(Boolean).join(' ');
   ['passportSeries', 'passportNumber', 'inn', 'snils', 'bik', 'accountNumber', 'correspondentAccount']
     .forEach((key) => { if (data[key]) data[key] = digits(data[key]); });

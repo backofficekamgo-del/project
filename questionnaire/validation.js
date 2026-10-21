@@ -5,7 +5,7 @@ function digits(value) {
 function validateContractor(data) {
   const errors = [];
   const required = {
-    lastName: 'Фамилия', firstName: 'Имя', middleName: 'Отчество', birthDate: 'Дата рождения', registrationAddress: 'Адрес регистрации', actualAddress: 'Фактический адрес проживания',
+    lastName: 'Фамилия', firstName: 'Имя', middleName: 'Отчество', birthDate: 'Дата рождения', registrationAddress: 'Адрес регистрации', actualAddressSame: 'Совпадение фактического адреса с адресом регистрации',
     passportSeries: 'Серия паспорта', passportNumber: 'Номер паспорта',
     passportIssueDate: 'Дата выдачи паспорта', passportIssuedBy: 'Кем выдан паспорт',
     inn: 'ИНН', snils: 'СНИЛС', phone: 'Телефон', email: 'Электронная почта',
@@ -24,6 +24,7 @@ function validateContractor(data) {
   if (data.correspondentAccount && !/^\d{20}$/.test(data.correspondentAccount)) errors.push('Корреспондентский счёт должен содержать 20 цифр.');
   if (data.email && !/^\S+@\S+\.\S+$/.test(data.email)) errors.push('Проверьте формат электронной почты.');
   if (data.wasCivilServant === 'Да' && !String(data.civilServiceDetails || '').trim()) errors.push('Укажите должность и наименование государственного органа.');
+  if (data.actualAddressSame === 'Нет' && !String(data.actualAddress || '').trim()) errors.push('Укажите фактический адрес проживания.');
   return errors;
 }
 
