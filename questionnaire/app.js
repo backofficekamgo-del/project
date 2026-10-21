@@ -11,6 +11,10 @@ const actualAddressSame = form.elements.actualAddressSame;
 const actualAddressField = document.querySelector('#actual-address-field');
 const actualAddressInput = form.elements.actualAddress;
 
+// Демонстрационное подключение DaData. Токен задаётся отдельно перед показом MVP.
+// Если токен пустой или DaData недоступна, используется встроенный справочник.
+const DADATA_TOKEN = '';
+
 // Для MVP используется небольшой демонстрационный справочник. В рабочей версии
 // его заменим на актуальный справочник банков или API.
 const bankDirectory = {
@@ -21,11 +25,29 @@ const bankDirectory = {
   '044525700': { name: 'АО «Райффайзенбанк»', correspondentAccount: '30101810200000000700' }
 };
 
-bikInput.addEventListener('input', () => {
-  const record = bankDirectory[digits(bikInput.value)];
+const applyBankRecord = (record) => {
   if (!record) return;
-  bankInput.value = record.name;
-  correspondentInput.value = record.correspondentAccount;
+  bankInput.value = record.name || '';
+  correspondentInput.value = record.correspondentAccount || '';
+};
+
+const lookupBank = (bik) => {
+  if (!DADATA_TOKEN) return Promise.resolve(bankDirectory[bik]);
+  return fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/bank', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Token ${DADATA_TOKEN}` },
+    body: JSON.stringify({ query: bik, count: 1 })
+  }).then((response) => response.ok ? response.json() : Promise.reject(new Error('DaData error')))
+    .then((result) => {
+      const value = result.suggestions && result.suggestions[0] && result.suggestions[0].data;
+      return value ? { name: value.name && (value.name.payment || value.name.short || value.name.full), correspondentAccount: value.correspondent_account } : null;
+    });
+};
+
+bikInput.addEventListener('input', () => {
+  const bik = digits(bikInput.value);
+  if (bik.length !== 9) return;
+  lookupBank(bik).then(applyBankRecord).catch(() => applyBankRecord(bankDirectory[bik]));
 });
 
 civilServantSelect.addEventListener('change', () => {
