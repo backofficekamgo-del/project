@@ -5,11 +5,12 @@ function digits(value) {
 function validateContractor(data) {
   const errors = [];
   const required = {
-    lastName: 'Фамилия', firstName: 'Имя', middleName: 'Отчество', birthDate: 'Дата рождения', registrationAddress: 'Адрес регистрации',
+    lastName: 'Фамилия', firstName: 'Имя', middleName: 'Отчество', birthDate: 'Дата рождения', registrationAddress: 'Адрес регистрации', actualAddress: 'Фактический адрес проживания',
     passportSeries: 'Серия паспорта', passportNumber: 'Номер паспорта',
     passportIssueDate: 'Дата выдачи паспорта', passportIssuedBy: 'Кем выдан паспорт',
     inn: 'ИНН', snils: 'СНИЛС', phone: 'Телефон', email: 'Электронная почта',
-    bankName: 'Наименование банка', bik: 'БИК', accountNumber: 'Расчётный счёт'
+    bankName: 'Наименование банка', bik: 'БИК', accountNumber: 'Расчётный счёт',
+    wasCivilServant: 'Сведения о государственной гражданской службе'
   };
   Object.entries(required).forEach(([key, label]) => {
     if (!String(data[key] || '').trim()) errors.push(`Заполните поле «${label}».`);
@@ -22,6 +23,7 @@ function validateContractor(data) {
   if (data.accountNumber && !/^\d{20}$/.test(data.accountNumber)) errors.push('Расчётный счёт должен содержать 20 цифр.');
   if (data.correspondentAccount && !/^\d{20}$/.test(data.correspondentAccount)) errors.push('Корреспондентский счёт должен содержать 20 цифр.');
   if (data.email && !/^\S+@\S+\.\S+$/.test(data.email)) errors.push('Проверьте формат электронной почты.');
+  if (data.wasCivilServant === 'Да' && !String(data.civilServiceDetails || '').trim()) errors.push('Укажите должность и наименование государственного органа.');
   return errors;
 }
 

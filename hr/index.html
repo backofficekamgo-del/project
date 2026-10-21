@@ -16,11 +16,16 @@
       <h2 id="name"></h2>
       <p>Дата отправки: <span id="submitted"></span></p>
       <p>Статус: <strong>Ожидает формирования договора</strong></p>
+      <div class="information">
+        <p><strong>Фактический адрес проживания:</strong> <span id="actual-address"></span></p>
+        <p><strong>Государственная гражданская служба за последние 2 года:</strong> <span id="civil-servant"></span></p>
+        <p id="civil-service-row" hidden><strong>Должность и государственный орган:</strong> <span id="civil-service-details-value"></span></p>
+      </div>
       <button id="create">Сформировать договор</button>
       <p id="created" class="success"></p>
     </section>
   </main>
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </body>
 </html>

@@ -4,6 +4,9 @@ const successBox = document.querySelector('#success-message');
 const bikInput = form.elements.bik;
 const bankInput = form.elements.bankName;
 const correspondentInput = form.elements.correspondentAccount;
+const civilServantSelect = form.elements.wasCivilServant;
+const civilServiceDetails = document.querySelector('#civil-service-details');
+const civilServiceDetailsInput = form.elements.civilServiceDetails;
 
 // Для MVP используется небольшой демонстрационный справочник. В рабочей версии
 // его заменим на актуальный справочник банков или API.
@@ -20,6 +23,13 @@ bikInput.addEventListener('input', () => {
   if (!record) return;
   bankInput.value = record.name;
   correspondentInput.value = record.correspondentAccount;
+});
+
+civilServantSelect.addEventListener('change', () => {
+  const isRequired = civilServantSelect.value === 'Да';
+  civilServiceDetails.hidden = !isRequired;
+  civilServiceDetailsInput.required = isRequired;
+  if (!isRequired) civilServiceDetailsInput.value = '';
 });
 
 form.addEventListener('submit', (event) => {
