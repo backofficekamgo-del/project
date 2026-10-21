@@ -16,17 +16,17 @@ const tokenStatus = document.querySelector('#token-status');
 
 // Токен не хранится в исходниках и не попадает в отправляемую анкету.
 // Для локальной демонстрации его можно задать в консоли браузера:
-// sessionStorage.setItem('dadataToken', '...')
+// localStorage.setItem('dadataToken', '...')
 // Если токен отсутствует или DaData недоступна, используется встроенный справочник.
-const DADATA_TOKEN = sessionStorage.getItem('dadataToken') || '';
+const DADATA_TOKEN = localStorage.getItem('dadataToken') || '';
 if (dadataTokenInput && DADATA_TOKEN) dadataTokenInput.value = DADATA_TOKEN;
 saveDadataTokenButton?.addEventListener('click', () => {
   const token = dadataTokenInput.value.trim();
   if (token) {
-    sessionStorage.setItem('dadataToken', token);
-    tokenStatus.textContent = 'Токен сохранён для этой сессии. Обновите страницу.';
+    localStorage.setItem('dadataToken', token);
+    tokenStatus.textContent = 'Токен сохранён в этом браузере. Обновите страницу.';
   } else {
-    sessionStorage.removeItem('dadataToken');
+    localStorage.removeItem('dadataToken');
     tokenStatus.textContent = 'Токен удалён. Используется встроенный справочник.';
   }
 });
