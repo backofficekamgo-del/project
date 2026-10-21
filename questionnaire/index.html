@@ -52,6 +52,14 @@
         <label>Корреспондентский счёт <input name="correspondentAccount" inputmode="numeric" maxlength="20"></label>
         <label>Расчётный счёт *<input name="accountNumber" inputmode="numeric" maxlength="20" required></label>
         <p class="hint">После ввода БИК известные данные банка подставятся автоматически.</p>
+        <details class="token-settings">
+          <summary>Настроить поиск банка через DaData</summary>
+          <label>Токен DaData (только для этой сессии)
+            <input id="dadata-token" type="password" autocomplete="off" placeholder="Вставьте токен">
+          </label>
+          <button id="save-dadata-token" type="button">Сохранить для этой сессии</button>
+          <span id="token-status" class="hint" role="status"></span>
+        </details>
       </fieldset>
 
       <fieldset>

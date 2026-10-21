@@ -10,10 +10,26 @@ const civilServiceDetailsInput = form.elements.civilServiceDetails;
 const actualAddressSame = form.elements.actualAddressSame;
 const actualAddressField = document.querySelector('#actual-address-field');
 const actualAddressInput = form.elements.actualAddress;
+const dadataTokenInput = document.querySelector('#dadata-token');
+const saveDadataTokenButton = document.querySelector('#save-dadata-token');
+const tokenStatus = document.querySelector('#token-status');
 
-// Демонстрационное подключение DaData. Токен задаётся отдельно перед показом MVP.
-// Если токен пустой или DaData недоступна, используется встроенный справочник.
-const DADATA_TOKEN = '';
+// Токен не хранится в исходниках и не попадает в отправляемую анкету.
+// Для локальной демонстрации его можно задать в консоли браузера:
+// sessionStorage.setItem('dadataToken', '...')
+// Если токен отсутствует или DaData недоступна, используется встроенный справочник.
+const DADATA_TOKEN = sessionStorage.getItem('dadataToken') || '';
+if (dadataTokenInput && DADATA_TOKEN) dadataTokenInput.value = DADATA_TOKEN;
+saveDadataTokenButton?.addEventListener('click', () => {
+  const token = dadataTokenInput.value.trim();
+  if (token) {
+    sessionStorage.setItem('dadataToken', token);
+    tokenStatus.textContent = 'Токен сохранён для этой сессии. Обновите страницу.';
+  } else {
+    sessionStorage.removeItem('dadataToken');
+    tokenStatus.textContent = 'Токен удалён. Используется встроенный справочник.';
+  }
+});
 
 // Для MVP используется небольшой демонстрационный справочник. В рабочей версии
 // его заменим на актуальный справочник банков или API.
