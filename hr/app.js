@@ -31,6 +31,12 @@ if (raw) {
   application.hidden = false;
   document.querySelector('#name').textContent = fullName || 'Подрядчик';
   document.querySelector('#submitted').textContent = new Date().toLocaleString('ru-RU');
+  document.querySelector('#actual-address').textContent = data.actualAddress || 'Не указано';
+  document.querySelector('#civil-servant').textContent = data.wasCivilServant || 'Не указано';
+  if (data.wasCivilServant === 'Да') {
+    document.querySelector('#civil-service-row').hidden = false;
+    document.querySelector('#civil-service-details-value').textContent = data.civilServiceDetails || 'Не указано';
+  }
   document.querySelector('#create').addEventListener('click', () => {
     fetch('../templates/Шаблон%20ГПХ%20АНО.docx')
       .then((response) => response.arrayBuffer())

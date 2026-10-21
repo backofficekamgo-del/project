@@ -16,9 +16,10 @@
         <legend>Личные данные</legend>
         <label>Фамилия *<input name="lastName" autocomplete="family-name" required></label>
         <label>Имя *<input name="firstName" autocomplete="given-name" required></label>
-        <label>Отчество *<input name="middleName" autocomplete="additional-name"></label>
+        <label>Отчество *<input name="middleName" autocomplete="additional-name" required></label>
         <label>Дата рождения *<input name="birthDate" type="date" required></label>
         <label>Адрес регистрации *<textarea name="registrationAddress" rows="3" required></textarea></label>
+        <label>Фактический адрес проживания *<textarea name="actualAddress" rows="3" required></textarea></label>
       </fieldset>
 
       <fieldset>
@@ -46,12 +47,26 @@
         <p class="hint">После ввода БИК известные данные банка подставятся автоматически.</p>
       </fieldset>
 
+      <fieldset>
+        <legend>Дополнительные сведения</legend>
+        <label>В течение последних 2-х лет замещали ли вы должность государственного гражданского служащего? *
+          <select name="wasCivilServant" required>
+            <option value="">Выберите ответ</option>
+            <option value="Нет">Нет</option>
+            <option value="Да">Да</option>
+          </select>
+        </label>
+        <label id="civil-service-details" hidden>Если да, укажите должность и наименование государственного органа *
+          <textarea name="civilServiceDetails" rows="3"></textarea>
+        </label>
+      </fieldset>
+
       <div id="form-errors" class="errors" role="alert" aria-live="polite"></div>
       <button type="submit">Сохранить анкету</button>
       <p id="success-message" class="success" role="status" aria-live="polite"></p>
     </form>
   </main>
   <script src="validation.js"></script>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
