@@ -18,15 +18,17 @@ const tokenStatus = document.querySelector('#token-status');
 // Для локальной демонстрации его можно задать в консоли браузера:
 // localStorage.setItem('dadataToken', '...')
 // Если токен отсутствует или DaData недоступна, используется встроенный справочник.
-const DADATA_TOKEN = localStorage.getItem('dadataToken') || '';
+let DADATA_TOKEN = localStorage.getItem('dadataToken') || '';
 if (dadataTokenInput && DADATA_TOKEN) dadataTokenInput.value = DADATA_TOKEN;
 saveDadataTokenButton?.addEventListener('click', () => {
   const token = dadataTokenInput.value.trim();
   if (token) {
     localStorage.setItem('dadataToken', token);
+    DADATA_TOKEN = token;
     tokenStatus.textContent = 'Токен сохранён в этом браузере. Обновите страницу.';
   } else {
     localStorage.removeItem('dadataToken');
+    DADATA_TOKEN = '';
     tokenStatus.textContent = 'Токен удалён. Используется встроенный справочник.';
   }
 });
