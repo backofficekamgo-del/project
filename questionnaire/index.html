@@ -19,7 +19,14 @@
         <label>Отчество *<input name="middleName" autocomplete="additional-name" required></label>
         <label>Дата рождения *<input name="birthDate" type="date" required></label>
         <label>Адрес регистрации *<textarea name="registrationAddress" rows="3" required></textarea></label>
-        <label>Фактический адрес проживания *<textarea name="actualAddress" rows="3" required></textarea></label>
+        <label>Фактический адрес проживания совпадает с адресом регистрации? *
+          <select name="actualAddressSame" required>
+            <option value="">Выберите ответ</option>
+            <option value="Да">Да</option>
+            <option value="Нет">Нет</option>
+          </select>
+        </label>
+        <label id="actual-address-field">Фактический адрес проживания *<textarea name="actualAddress" rows="3" required></textarea></label>
       </fieldset>
 
       <fieldset>
@@ -67,6 +74,6 @@
     </form>
   </main>
   <script src="validation.js"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

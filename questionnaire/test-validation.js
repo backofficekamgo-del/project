@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const { validateContractor } = require('./validation');
 
 const valid = {
-  lastName: 'Иванов', firstName: 'Иван', middleName: 'Иванович', fullName: 'Иванов Иван Иванович', birthDate: '1990-01-01', registrationAddress: 'г. Пермь', actualAddress: 'г. Пермь',
+  lastName: 'Иванов', firstName: 'Иван', middleName: 'Иванович', fullName: 'Иванов Иван Иванович', birthDate: '1990-01-01', registrationAddress: 'г. Пермь', actualAddress: 'г. Пермь', actualAddressSame: 'Нет',
   passportSeries: '1234', passportNumber: '123456', passportIssueDate: '2010-01-01', passportIssuedBy: 'УФМС',
   inn: '123456789012', snils: '12345678901', phone: '+79990000000', email: 'test@example.ru',
   bankName: 'Тестовый банк', bik: '123456789', accountNumber: '12345678901234567890', correspondentAccount: '',
